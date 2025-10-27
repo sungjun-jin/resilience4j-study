@@ -1,6 +1,7 @@
 package me.sj.study.resilience4j.retry
 
 import io.github.resilience4j.retry.annotation.Retry
+import me.sj.study.resilience4j.exception.IgnoreException
 import me.sj.study.resilience4j.exception.RetryException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
@@ -19,15 +20,19 @@ class RetryService {
      */
     private fun fallback(param: String?, ex: Exception): String {
         // fallback 처리
-        return "Recovered: $ex"
+        logger.warn("Retry fallback triggered for request: $param, reason: ${ex.message}")
+        return "fallback 기능 실행 (요청: $param)"
     }
 
     /**
      * 실제 다른 서버를 호출하는 메소드
      */
     private fun callAnotherServer(param: String?): String {
-        // 다른 서버 호출 (생략)
+        when (param) {
+            "retry" -> throw RetryException("retry exception")
+            "ignore" -> throw IgnoreException("ignore exception")
+        }
 
-        throw RetryException("retry exception")
+        return "성공 응답 (요청: $param)"
     }
 }

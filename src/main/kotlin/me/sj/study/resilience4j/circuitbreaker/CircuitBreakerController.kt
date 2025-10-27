@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(value = ["/"])
-class CircuitBreakerController(private val circuitBreakerService: CurcuitBreakerService) {
+class CircuitBreakerController(private val circuitBreakerService: CircuitBreakerService) {
 
     @GetMapping("/circuit-breaker-call")
     fun apiCall(@RequestParam param: String?): String? {
